@@ -1,0 +1,21 @@
+{
+  "name": "pixelten-chat",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pixelten Chat workspace",
+  "workspaces": [
+    "stoat/packages/*",
+    "stoat/js-lingui-solid",
+    "stoat/solid-livekit-components"
+  ],
+  "scripts": {
+    "navigate": "cd pixelten-chat",
+    "runpix": "cd pixelten-chat && npm run dev",
+    "build": "vite build",
+    "preview": "cd pixelten-chat && vite preview"
+  },
+  "dependencies": {
+    "firebase": "^12.6.0",
+    "nanoid": "^5.1.6"
+  }
+}

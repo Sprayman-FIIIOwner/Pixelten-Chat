@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-color: #1e1f22;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #2b2d31;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-track {
+  background-color: #1e1f22;
+}
+
+button {
+  transition: all 0.15s ease;
+}
+button:active {
+  transform: scale(0.97);
+}
+input:focus {
+  box-shadow: 0 0 0 2px #5865f280;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+.animate-bounce {
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+.delay-100 { animation-delay: 0.2s; }
+.delay-200 { animation-delay: 0.4s; }
+
+:root { --bg: #1e1f22; --sidebar: #2b2d31; --panel: #313338; --accent: #5865f2; color-scheme: dark; }
+html,body,#root { height:100%; margin:0; font-family: Inter, system-ui, Arial; background:var(--bg); color:#fff; }
+button { cursor:pointer; border:0; }

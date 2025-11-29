@@ -1,0 +1,5 @@
+packages:
+  - stoat/packages/*
+  - stoat/js-lingui-solid
+  - stoat/solid-livekit-components
+  - stoat/stoat.js
