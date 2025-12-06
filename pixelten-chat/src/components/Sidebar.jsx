@@ -14,10 +14,16 @@ export default function Sidebar(props) {
   createEffect(() => {
     setServers([
       {
-        id: "pixelten",
+        id: "pixelten-dev",
         name: "Pixelten HQ",
-        iconUrl: "/images/serverbuttonopen.png",
+        iconUrl: "/images/server1.png",
         channels: ["general", "dev", "memes"]
+      },
+      {
+        id: "csklf-dev",
+        name: "Cube Solvers",
+        iconUrl: "/images/server2.png",
+        channels: ["generla", "help", "races"]
       }
     ]);
   });
@@ -28,10 +34,12 @@ export default function Sidebar(props) {
   });
 
   return (
+    // SINGLE root div only (no nested duplicate)
     <div
       class={`h-full bg-[#2b2d31] flex flex-col justify-between overflow-hidden transition-all duration-200 ${
         collapsed() ? "w-16" : "w-64"
       }`}
+      style="min-width:64px; max-width:256px;"
     >
       <div
         class={`h-full bg-[#2b2d31] flex flex-col justify-between overflow-hidden transition-all duration-200 ${
@@ -42,7 +50,6 @@ export default function Sidebar(props) {
 
       {/* --- TOP SECTION (Collapse + Server List) --- */}
       <div class="flex flex-col gap-1 px-2 overflow-y-auto flex-1">
-
         {/* Collapse Button */}
         <button
           onClick={() => setCollapsed(!collapsed())}
@@ -57,7 +64,7 @@ export default function Sidebar(props) {
             {(s) => (
               <button
                 class={`flex items-center gap-2 p-2 rounded hover:bg-[#313338] transition ${
-                  activeServer()?.id === s.id ? "bg-[#313338]" : ""
+                  activeServer() && activeServer().id === s.id ? "bg-[#313338]" : ""
                 }`}
                 onClick={() => {
                   setActiveServer(s);
@@ -67,7 +74,7 @@ export default function Sidebar(props) {
                 <img
                   src={s.iconUrl}
                   class="w-10 h-10 rounded object-cover shrink-0"
-                  
+                  style="flex: 0 0 auto;"
                 />
 
                 {!collapsed() && (
@@ -90,16 +97,16 @@ export default function Sidebar(props) {
         <button class="w-full p-2 bg-[#3a3b3f] rounded hover:bg-[#4a4c50]">
           {collapsed() ? (
             <img
-              src="/images/serverbuttonopen.png"
-              class="w-8 h-8 mx-auto object-cover shrink-0" 
-              
+              src="/images/serverbuttonclose.png"
+              class="w-12 h-12 rounded object-cover shrink-0"
+              style="flex: 0 0 auto;"
             />
           ) : (
             <div class="flex items-center gap-2">
               <img
                 src="/images/serverbuttonopen.png"
                 class="w-8 h-8 object-cover shrink-0"
-                
+                style="flex: 0 0 auto;"
               />
               <span class="text-sm">Server Menu</span>
             </div>
@@ -109,14 +116,14 @@ export default function Sidebar(props) {
         {/* USER INFO */}
         <div class="flex items-center gap-2">
           <img
-            src={me()?.photoURL || "/default-avatar.png"}
+            src={me()?.photoURL || "/images/user.png"}
             class="w-10 h-10 rounded-full object-cover shrink-0"
-            
+            style="flex: 0 0 auto;"
           />
           {!collapsed() && (
             <div>
               <div class="font-semibold text-sm">
-                {me()?.displayName || me()?.email}
+                {me()?.displayName || me()?.email || "Guest"}
               </div>
               <div class="text-xs text-gray-400">Online</div>
             </div>

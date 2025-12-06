@@ -4,9 +4,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/sidebar";
 import ChatArea from "./components/ChatArea";
-import Login from "./auth/Login"; // optional, your auth components
+import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import DatabaseSelector from "./setup/DatabaseSelector";
 
@@ -29,7 +29,6 @@ export default function App() {
       }
       setUser(u);
 
-      // load user metadata (example)
       try {
         const snap = await getDoc(doc(db, "users", u.uid));
         if (snap.exists()) {
@@ -44,20 +43,26 @@ export default function App() {
   });
 
   return (
+    // make the app root a flex container so children layout reliably
     <div class="h-screen bg-[#1e1f22] text-white flex">
       <Show when={!user()}>
-        {mode() === "login" ? (
-          <Login switchToSignup={() => setMode("signup")} />
-        ) : (
-          <Signup switchToLogin={() => setMode("login")} />
-        )}
+        <div class="flex justify-center items-center h-full w-full">
+          {mode() === "login" ? (
+            <Login switchToSignup={() => setMode("signup")} />
+          ) : (
+            <Signup switchToLogin={() => setMode("login")} />
+          )}
+        </div>
       </Show>
 
       <Show when={user() && !database()}>
-        <DatabaseSelector onChoose={() => window.location.reload()} />
+        <div class="flex justify-center items-center h-full w-full">
+          <DatabaseSelector onChoose={() => window.location.reload()} />
+        </div>
       </Show>
 
       <Show when={user() && database()}>
+        {/* Direct children of the root flex: Sidebar + ChatArea */}
         <Sidebar
           activeServer={activeServer}
           setActiveServer={setActiveServer}
@@ -66,8 +71,6 @@ export default function App() {
         />
         <ChatArea server={activeServer} channel={activeChannel} user={user} />
       </Show>
-
-      {/* Optionally: if you want the app to run even if not logged, toggle above */}
     </div>
   );
 }
