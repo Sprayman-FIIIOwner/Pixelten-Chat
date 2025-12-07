@@ -3,6 +3,7 @@ import { createSignal, Show, onMount } from "solid-js";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
+import { ensureUserDoc } from "./ensureUserDoc"
 
 import Sidebar from "./components/sidebar";
 import ChatArea from "./components/ChatArea";
@@ -10,9 +11,12 @@ import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import DatabaseSelector from "./setup/DatabaseSelector";
 
+
+
 export default function App() {
   const [mode, setMode] = createSignal("login"); // login | signup
   const [user, setUser] = createSignal(null);
+  const [showProfileEditor, setShowProfileEditor] = createSignal(false);
   const [database, setDatabase] = createSignal(null);
 
   const [activeServer, setActiveServer] = createSignal({
@@ -23,23 +27,17 @@ export default function App() {
 
   onMount(() => {
     onAuthStateChanged(auth, async (u) => {
-      if (!u) {
-        setUser(null);
-        return;
-      }
-      setUser(u);
-
-      try {
-        const snap = await getDoc(doc(db, "users", u.uid));
-        if (snap.exists()) {
-          setDatabase(snap.data().database || null);
-        } else {
-          setDatabase(null);
+        if (!u) {
+          setUser(null);
+          return;
         }
-      } catch (e) {
-        console.error(e);
-      }
-    });
+        setUser(u);
+      
+        await ensureUserDoc(u.uid, u.email);
+      
+        const userSnap = await getDoc(doc(db, "users", u.uid));
+        setDatabase(userSnap.data().database);
+      });
   });
 
   return (
@@ -68,6 +66,7 @@ export default function App() {
           setActiveServer={setActiveServer}
           activeChannel={activeChannel}
           setActiveChannel={setActiveChannel}
+          openProfileEditor={() => setShowProfileEditor(true)}
         />
         <ChatArea server={activeServer} channel={activeChannel} user={user} />
       </Show>

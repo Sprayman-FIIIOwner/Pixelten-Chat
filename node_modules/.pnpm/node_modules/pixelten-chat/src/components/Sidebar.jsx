@@ -92,6 +92,13 @@ export default function Sidebar(props) {
       </div>
 
       {/* --- BOTTOM SECTION --- */}
+      <button
+        class="w-full p-2 bg-[#3a3b3f] rounded hover:bg-[#4a4c50]"
+        onClick={() => props.openProfileEditor()}
+      >
+        Edit Profile
+      </button>
+
       <div class="flex flex-col gap-4 p-3 border-t border-[#202225] shrink-0">
         {/* Server Menu Toggle Button (always visible, fixed at bottom) */}
         <button class="w-full p-2 bg-[#3a3b3f] rounded hover:bg-[#4a4c50]">
