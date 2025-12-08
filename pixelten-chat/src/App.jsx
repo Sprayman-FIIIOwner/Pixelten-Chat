@@ -10,8 +10,7 @@ import ChatArea from "./components/ChatArea";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import DatabaseSelector from "./setup/DatabaseSelector";
-
-
+import ProfileEditor from "./user/ProfileEditor";
 
 export default function App() {
   const [mode, setMode] = createSignal("login"); // login | signup
@@ -69,6 +68,10 @@ export default function App() {
           openProfileEditor={() => setShowProfileEditor(true)}
         />
         <ChatArea server={activeServer} channel={activeChannel} user={user} />
+      </Show>
+
+      <Show when={showProfileEditor()}>
+        <ProfileEditor onClose={() => setShowProfileEditor(false)} />
       </Show>
     </div>
   );
