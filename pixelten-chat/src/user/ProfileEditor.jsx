@@ -1,77 +1,76 @@
+// src/components/ProfileEditor.jsx
 import { createSignal } from "solid-js";
-import { auth, db, storage } from "../firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
+import { db } from "../firebase";
 
 export default function ProfileEditor(props) {
-  const uid = auth.currentUser.uid;
+  const { user, userProfile, close } = props;
 
-  const [username, setUsername] = createSignal("");
-  const [status, setStatus] = createSignal("online");
-  const [avatarFile, setAvatarFile] = createSignal(null);
+  const [displayName, setDisplayName] = createSignal(userProfile().displayName);
+  const [username, setUsername] = createSignal(userProfile().username);
+  const [status, setStatus] = createSignal(userProfile().status);
+  const [bio, setBio] = createSignal(userProfile().bio);
 
-  const uploadAvatar = async () => {
-    if (!avatarFile()) return null;
-    const storageRef = ref(storage, `avatars/${uid}.png`);
-    await uploadBytes(storageRef, avatarFile());
-    return await getDownloadURL(storageRef);
-  };
+  async function save() {
+    const ref = doc(db, "users", user().uid);
 
-  const saveProfile = async () => {
-    let avatarURL = await uploadAvatar();
-
-    await updateDoc(doc(db, "users", uid), {
-      username: username() || "User",
+    await updateDoc(ref, {
+      displayName: displayName(),
+      username: username(),
       status: status(),
-      ...(avatarURL && { avatarURL }),
+      bio: bio(),
     });
 
-    props.onClose();
-  };
+    close();
+  }
 
   return (
-    <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
-      <div class="bg-[#2b2d31] p-6 rounded w-80">
-        <h1 class="text-xl mb-4 font-bold">Edit Profile</h1>
+    <div class="fixed inset-0 bg-black/60 flex justify-center items-center">
+      <div class="bg-[#2b2d31] p-6 rounded-lg w-96">
+        <h2 class="text-lg font-bold mb-4">Edit Profile</h2>
 
+        <label class="text-sm">Display Name</label>
         <input
-          type="text"
-          placeholder="Username"
-          class="w-full p-2 mb-3 rounded bg-[#1e1f22]"
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          value={displayName()}
+          onInput={(e) => setDisplayName(e.target.value)}
+        />
+
+        <label class="text-sm">Username</label>
+        <input
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
           value={username()}
           onInput={(e) => setUsername(e.target.value)}
         />
 
+        <label class="text-sm">Status</label>
         <select
-          class="w-full p-2 mb-3 rounded bg-[#1e1f22]"
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
           value={status()}
           onInput={(e) => setStatus(e.target.value)}
         >
           <option value="online">Online</option>
-          <option value="busy">Busy</option>
           <option value="away">Away</option>
+          <option value="busy">Do Not Disturb</option>
+          <option value="offline">Offline</option>
         </select>
 
-        <input
-          type="file"
-          class="w-full mb-3"
-          onInput={(e) => setAvatarFile(e.target.files[0])}
+        <label class="text-sm">Bio</label>
+        <textarea
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          rows="3"
+          value={bio()}
+          onInput={(e) => setBio(e.target.value)}
         />
 
-        <button
-          class="w-full bg-[#5865f2] py-2 rounded hover:bg-[#4752c4]"
-          onClick={saveProfile}
-        >
-          Save
-        </button>
-
-        <button
-          class="mt-2 w-full text-sm opacity-60 hover:opacity-100"
-          onClick={props.onClose}
-        >
-          Cancel
-        </button>
+        <div class="flex justify-end gap-3 mt-4">
+          <button onClick={close} class="px-4 py-2 bg-[#3a3b3f] rounded">
+            Cancel
+          </button>
+          <button onClick={save} class="px-4 py-2 bg-blue-600 rounded">
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

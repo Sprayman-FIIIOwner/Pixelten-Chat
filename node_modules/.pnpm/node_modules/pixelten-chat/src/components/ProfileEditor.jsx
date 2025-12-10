@@ -1,81 +1,77 @@
-import { createSignal, onMount } from "solid-js";
-import { auth, db } from "../firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+// src/components/ProfileEditor.jsx
+import { createSignal } from "solid-js";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export default function ProfileEditor(props) {
-  const [profile, setProfile] = createSignal(null);
-  const [saving, setSaving] = createSignal(false);
+  const { user, userProfile, close } = props;
 
-  onMount(async () => {
-    const ref = doc(db, "users", auth.currentUser.uid);
-    const snap = await getDoc(ref);
-    setProfile(snap.data());
-  });
+  const [displayName, setDisplayName] = createSignal(userProfile().displayName);
+  const [username, setUsername] = createSignal(userProfile().username);
+  const [status, setStatus] = createSignal(userProfile().status);
+  const [bio, setBio] = createSignal(userProfile().bio);
 
   async function save() {
-    setSaving(true);
-    const ref = doc(db, "users", auth.currentUser.uid);
+    const ref = doc(db, "users", user().uid);
 
     await updateDoc(ref, {
-      displayName: profile().displayName,
-      bio: profile().bio,
-      status: profile().status
+      displayName: displayName(),
+      username: username(),
+      status: status(),
+      bio: bio(),
     });
 
-    setSaving(false);
-    props.onClose();
+    close();
   }
 
-  if (!profile()) return <div class="p-6">Loading…</div>;
-
   return (
-    <div class="p-6 bg-[#1b1c1d] w-full h-full">
-      <h2 class="text-xl mb-4">Edit Profile</h2>
+    <div class="fixed inset-0 bg-black/60 flex justify-center items-center">
+      <div class="bg-[#2b2d31] p-6 rounded-lg w-96">
+        <h2 class="text-lg font-bold mb-4">Edit Profile</h2>
 
-      <div class="mb-4">
-        <label>Name:</label>
+        <label class="text-sm">Display Name</label>
         <input
-          class="bg-[#111] p-2 rounded w-full"
-          value={profile().displayName}
-          onInput={(e) =>
-            setProfile({ ...profile(), displayName: e.target.value })
-          }
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          value={displayName()}
+          onInput={(e) => setDisplayName(e.target.value)}
         />
-      </div>
 
-      <div class="mb-4">
-        <label>Status:</label>
+        <label class="text-sm">Username</label>
+        <input
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          value={username()}
+          onInput={(e) => setUsername(e.target.value)}
+        />
+
+        <label class="text-sm">Status</label>
         <select
-          class="bg-[#111] p-2 rounded w-full"
-          value={profile().status}
-          onInput={(e) =>
-            setProfile({ ...profile(), status: e.target.value })
-          }
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          value={status()}
+          onInput={(e) => setStatus(e.target.value)}
         >
           <option value="online">Online</option>
-          <option value="idle">Idle</option>
-          <option value="busy">Busy</option>
+          <option value="away">Away</option>
+          <option value="busy">Do Not Disturb</option>
+          <option value="offline">Offline</option>
         </select>
-      </div>
 
-      <div class="mb-4">
-        <label>Bio:</label>
+        <label class="text-sm">Bio</label>
         <textarea
-          class="bg-[#111] p-2 rounded w-full"
-          value={profile().bio}
-          onInput={(e) =>
-            setProfile({ ...profile(), bio: e.target.value })
-          }
+          class="w-full p-2 bg-[#1e1f22] mt-1 mb-3 rounded"
+          rows="3"
+          value={bio()}
+          onInput={(e) => setBio(e.target.value)}
         />
-      </div>
 
-      <button
-        class="mt-4 bg-blue-600 px-4 py-2 rounded"
-        disabled={saving()}
-        onClick={save}
-      >
-        {saving() ? "Saving…" : "Save"}
-      </button>
+        <div class="flex justify-end gap-3 mt-4">
+          <button onClick={close} class="px-4 py-2 bg-[#3a3b3f] rounded">
+            Cancel
+          </button>
+          <button onClick={save} class="px-4 py-2 bg-blue-600 rounded">
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
