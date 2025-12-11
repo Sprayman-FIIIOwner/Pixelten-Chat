@@ -1,2 +1,5 @@
 # Pixelten-Chat_For-web
-My project
+Quick links:
+### [Portofolio](https://spraymandesignhostingfromcanva.my.canva.site/sprayman-portofolio)
+### [BottedCode](https://github.com/Sprayman-FIIIOwner/Pixelten-Chat/tree/BottedCode)
+### [Releases](https://github.com/Sprayman-FIIIOwner/Pixelten-Chat/releases)
