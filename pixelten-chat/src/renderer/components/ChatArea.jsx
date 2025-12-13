@@ -74,27 +74,7 @@ export default function ChatArea(props) {
 
   return (
     <div class="flex-1 flex flex-col">
-      <div class="p-4 border-b border-[#202225] font-bold text-lg">
-        {server() ? `${server().name} @ ${channel()}` : "Select a server"}
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-4 space-y-2">
-        <For each={messages()}>
-          {(m) => <MessageBubble msg={m} onReply={(msg) => setReplyTo(msg)} />}
-        </For>
-      </div>
-
-      <div class="p-4 border-t border-[#202225] flex gap-2 items-center">
-        <Show when={replyTo()}>
-          <div class="px-3 py-2 bg-[#151515] rounded flex-1">
-            Replying to <b>{replyTo().author.displayName}</b>: <span class="ml-2">{replyTo().content.slice(0,80)}</span>
-            <button class="ml-3 text-sm" onClick={() => setReplyTo(null)}>Cancel</button>
-          </div>
-        </Show>
-
-        <input class="flex-1 bg-[#111] text-white p-2 rounded outline-none" placeholder="Type a message..." value={content()} onInput={(e)=>setContent(e.target.value)} />
-        <button class="px-4 py-2 bg-blue-600 rounded" onClick={sendMessage}>Send</button>
-      </div>
+      setReplyTo={setReplyTo}
     </div>
   );
 }

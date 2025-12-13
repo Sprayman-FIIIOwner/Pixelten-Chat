@@ -15,6 +15,9 @@
     "preview": "cd pixelten-chat && vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
     "firebase": "^12.6.0",
     "nanoid": "^5.1.6"
   }

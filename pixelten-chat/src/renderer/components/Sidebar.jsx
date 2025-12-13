@@ -73,7 +73,13 @@ export default function Sidebar(props) {
       {/* BOTTOM */}
       <div class="flex flex-col gap-4 p-3 border-t border-[#202225] shrink-0">
 
-        <button class="w-full p-2 bg-[#3a3b3f] rounded hover:bg-[#4a4c50]">
+        <button class="w-full p-2 bg-[#3a3b3f] rounded hover:bg-[#4a4c50]"
+         onClick={() => props.openServerSettings()}
+        >
+          <div class="flex items-center gap-2">
+            <img src="/images/serverbuttonopen.png" class="w-8 h-8 object-cover" />
+            <span class="text-sm">Server Settings</span>
+          </div>
           {collapsed() ? (
             <img
               src="/images/serverbuttonopen.png"

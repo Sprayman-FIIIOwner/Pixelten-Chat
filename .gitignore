@@ -1,2 +1,6 @@
 node_modules/.pnpm/node_modules/pixelten-chat/src/firebase.js
 src/firebase.js
+node_modules
+android
+capacitor.*
+.gitignore
